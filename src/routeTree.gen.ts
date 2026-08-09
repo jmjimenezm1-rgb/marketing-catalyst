@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BandejaEntradaRouteImport } from './routes/bandeja-entrada'
 import { Route as EnviosRouteImport } from './routes/envios'
 import { Route as SecuenciasRouteImport } from './routes/secuencias'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BandejaEntradaRoute = BandejaEntradaRouteImport.update({
+  id: '/bandeja-entrada',
+  path: '/bandeja-entrada',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EnviosRoute = EnviosRouteImport.update({
@@ -31,30 +37,34 @@ const SecuenciasRoute = SecuenciasRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bandeja-entrada': typeof BandejaEntradaRoute
   '/envios': typeof EnviosRoute
   '/secuencias': typeof SecuenciasRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bandeja-entrada': typeof BandejaEntradaRoute
   '/envios': typeof EnviosRoute
   '/secuencias': typeof SecuenciasRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bandeja-entrada': typeof BandejaEntradaRoute
   '/envios': typeof EnviosRoute
   '/secuencias': typeof SecuenciasRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/envios' | '/secuencias'
+  fullPaths: '/' | '/bandeja-entrada' | '/envios' | '/secuencias'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/envios' | '/secuencias'
-  id: '__root__' | '/' | '/envios' | '/secuencias'
+  to: '/' | '/bandeja-entrada' | '/envios' | '/secuencias'
+  id: '__root__' | '/' | '/bandeja-entrada' | '/envios' | '/secuencias'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BandejaEntradaRoute: typeof BandejaEntradaRoute
   EnviosRoute: typeof EnviosRoute
   SecuenciasRoute: typeof SecuenciasRoute
 }
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bandeja-entrada': {
+      id: '/bandeja-entrada'
+      path: '/bandeja-entrada'
+      fullPath: '/bandeja-entrada'
+      preLoaderRoute: typeof BandejaEntradaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/envios': {
@@ -87,6 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BandejaEntradaRoute: BandejaEntradaRoute,
   EnviosRoute: EnviosRoute,
   SecuenciasRoute: SecuenciasRoute,
 }

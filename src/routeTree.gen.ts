@@ -10,33 +10,80 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BandejaEntradaRouteImport } from './routes/bandeja-entrada'
+import { Route as BandejaSalidaRouteImport } from './routes/bandeja-salida'
+import { Route as EnviosRouteImport } from './routes/envios'
+import { Route as SecuenciasRouteImport } from './routes/secuencias'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BandejaEntradaRoute = BandejaEntradaRouteImport.update({
+  id: '/bandeja-entrada',
+  path: '/bandeja-entrada',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BandejaSalidaRoute = BandejaSalidaRouteImport.update({
+  id: '/bandeja-salida',
+  path: '/bandeja-salida',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnviosRoute = EnviosRouteImport.update({
+  id: '/envios',
+  path: '/envios',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SecuenciasRoute = SecuenciasRouteImport.update({
+  id: '/secuencias',
+  path: '/secuencias',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bandeja-entrada': typeof BandejaEntradaRoute
+  '/bandeja-salida': typeof BandejaSalidaRoute
+  '/envios': typeof EnviosRoute
+  '/secuencias': typeof SecuenciasRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bandeja-entrada': typeof BandejaEntradaRoute
+  '/bandeja-salida': typeof BandejaSalidaRoute
+  '/envios': typeof EnviosRoute
+  '/secuencias': typeof SecuenciasRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bandeja-entrada': typeof BandejaEntradaRoute
+  '/bandeja-salida': typeof BandejaSalidaRoute
+  '/envios': typeof EnviosRoute
+  '/secuencias': typeof SecuenciasRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/bandeja-entrada' | '/bandeja-salida' | '/envios' | '/secuencias'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/bandeja-entrada' | '/bandeja-salida' | '/envios' | '/secuencias'
+  id:
+    | '__root__'
+    | '/'
+    | '/bandeja-entrada'
+    | '/bandeja-salida'
+    | '/envios'
+    | '/secuencias'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BandejaEntradaRoute: typeof BandejaEntradaRoute
+  BandejaSalidaRoute: typeof BandejaSalidaRoute
+  EnviosRoute: typeof EnviosRoute
+  SecuenciasRoute: typeof SecuenciasRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,22 +95,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bandeja-entrada': {
+      id: '/bandeja-entrada'
+      path: '/bandeja-entrada'
+      fullPath: '/bandeja-entrada'
+      preLoaderRoute: typeof BandejaEntradaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bandeja-salida': {
+      id: '/bandeja-salida'
+      path: '/bandeja-salida'
+      fullPath: '/bandeja-salida'
+      preLoaderRoute: typeof BandejaSalidaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/envios': {
+      id: '/envios'
+      path: '/envios'
+      fullPath: '/envios'
+      preLoaderRoute: typeof EnviosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/secuencias': {
+      id: '/secuencias'
+      path: '/secuencias'
+      fullPath: '/secuencias'
+      preLoaderRoute: typeof SecuenciasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BandejaEntradaRoute: BandejaEntradaRoute,
+  BandejaSalidaRoute: BandejaSalidaRoute,
+  EnviosRoute: EnviosRoute,
+  SecuenciasRoute: SecuenciasRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

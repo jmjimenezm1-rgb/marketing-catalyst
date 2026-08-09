@@ -67,10 +67,10 @@ export function Pill({
   tone,
   className,
 }: {
-  value?: string;
-  label?: string;
-  tone?: Tone;
-  className?: string;
+  value?: string | undefined;
+  label?: string | undefined;
+  tone?: Tone | undefined;
+  className?: string | undefined;
 }) {
   const resolved = tone ?? (value ? TONOS[value] ?? "neutral" : "neutral");
   return (
@@ -87,7 +87,7 @@ export function PageHeader({
 }: {
   title: string;
   subtitle: string;
-  right?: React.ReactNode;
+  right?: React.ReactNode | undefined;
 }) {
   return (
     <div className="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-5">
@@ -108,8 +108,8 @@ export function KpiCard({
 }: {
   label: string;
   value: string | number;
-  hint?: string;
-  tone?: Tone;
+  hint?: string | undefined;
+  tone?: Tone | undefined;
 }) {
   return (
     <div className="rounded-xl border border-border bg-card p-4 shadow-panel">
@@ -123,7 +123,7 @@ export function KpiCard({
   );
 }
 
-export function fecha(iso?: string) {
+export function fecha(iso?: string | undefined) {
   if (!iso) return "—";
   return new Date(iso).toLocaleString("es-ES", {
     day: "2-digit",

@@ -46,7 +46,7 @@ export interface Mensaje {
   campanaId: string;
   productoId: string;
   canal: Canal;
-  asunto?: string;
+  asunto?: string | undefined;
   texto: string;
   aprobado: boolean;
   riesgoLegal: "bajo" | "medio" | "alto";
@@ -71,15 +71,15 @@ export interface Envio {
     | "condicionado_respuesta"
     | "condicionado_no_respuesta";
   estado: EstadoEnvio;
-  fechaProgramacion?: string;
-  fechaEnvio?: string;
-  fechaEntrega?: string;
-  fechaLectura?: string;
-  fechaRespuesta?: string;
-  error?: string;
-  idExterno?: string;
-  aprobadoPor?: string;
-  enviadoPor?: string;
+  fechaProgramacion?: string | undefined;
+  fechaEnvio?: string | undefined;
+  fechaEntrega?: string | undefined;
+  fechaLectura?: string | undefined;
+  fechaRespuesta?: string | undefined;
+  error?: string | undefined;
+  idExterno?: string | undefined;
+  aprobadoPor?: string | undefined;
+  enviadoPor?: string | undefined;
   historial: { fecha: string; evento: string; usuario: string }[];
 }
 
@@ -167,12 +167,12 @@ export interface Borrador {
   campanaId: string;
   productoId: string;
   canal: Canal;
-  entradaId?: string;
+  entradaId?: string | undefined;
   texto: string;
   estado: "borrador" | "pendiente_revision" | "aprobada" | "programada" | "enviada" | "cancelada";
   responsable: string;
   creado: string;
-  previstoEnvio?: string;
+  previstoEnvio?: string | undefined;
   riesgoLegal: "bajo" | "medio" | "alto";
   revisionLegal: boolean;
 }

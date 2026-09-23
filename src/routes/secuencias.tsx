@@ -108,9 +108,9 @@ function SecuenciasPage() {
         title="Campañas evolutivas y secuencias"
         subtitle="Módulo 9 · Secuencias de refuerzo con orden, canal, plantilla, condición de activación, espera y segmento. Toda solicitud de baja detiene la secuencia y ningún paso sale sin revisión humana cuando está marcada."
         right={
-          <div className="flex items-center gap-2">
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
             <Select value={secuencia.id} onValueChange={setActiva}>
-              <SelectTrigger className="w-[280px]">
+              <SelectTrigger className="w-full sm:w-[280px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

@@ -1,6 +1,9 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
 import {
   borradoresSeed,
+  clientes as clientesSeed,
+  type Canal,
+  type Cliente,
   entradasSeed,
   enviosSeed,
   secuenciasSeed,
@@ -27,6 +30,20 @@ interface Store {
   añadirNota: (entradaId: string, texto: string) => void;
   actualizarBorrador: (id: string, cambios: Partial<Borrador>) => void;
   crearBorradorIA: (entrada: MensajeEntrada, texto: string) => void;
+  clientes: Cliente[];
+  auditoria: EventoAuditoria[];
+  registrarBaja: (clienteId: string, canales: Canal[], motivo: string, origen: string) => void;
+  registrarConsentimiento: (clienteId: string, canal: Canal, fuente: string) => void;
+}
+
+export interface EventoAuditoria {
+  id: string;
+  fecha: string;
+  usuario: string;
+  modulo: string;
+  accion: string;
+  detalle: string;
+  clienteId?: string | undefined;
 }
 
 const StoreContext = createContext<Store | null>(null);
@@ -38,6 +55,24 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [secuencias, setSecuencias] = useState<Secuencia[]>(secuenciasSeed);
   const [entradas, setEntradas] = useState<MensajeEntrada[]>(entradasSeed);
   const [borradores, setBorradores] = useState<Borrador[]>(borradoresSeed);
+  const [clientes, setClientes] = useState<Cliente[]>(clientesSeed);
+  const [auditoria, setAuditoria] = useState<EventoAuditoria[]>([]);
+  const log = (e: Omit<EventoAuditoria, "id" | "fecha" | "usuario">) =>
+    setAuditoria((prev) => [
+      { ...e, id: Math.random().toString(36).slice(2, 10), fecha: ahora(), usuario: USUARIO_ACTUAL },
+      ...prev,
+    ]);
+  // Mantiene sincronizado el registro compartido que usa el servicio de cumplimiento (mock).
+  const aplicarCliente = (id: string, fn: (c: Cliente) => Cliente) =>
+    setClientes((prev) =>
+      prev.map((c) => {
+        if (c.id !== id) return c;
+        const nuevo = fn(c);
+        const ref = clientesSeed.find((x) => x.id === id);
+        if (ref) Object.assign(ref, nuevo);
+        return nuevo;
+      }),
+    );
 
   const value = useMemo<Store>(
     () => ({
@@ -46,6 +81,38 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       entradas,
       borradores,
       usuario: USUARIO_ACTUAL,
+      clientes,
+      auditoria,
+      registrarBaja: (clienteId, canales, motivo, origen) => {
+        aplicarCliente(clienteId, (c) => ({
+          ...c,
+          consentimiento: {
+            ...c.consentimiento,
+            ...Object.fromEntries(canales.map((k) => [k, "baja"])),
+          } as Cliente["consentimiento"],
+        }));
+        // Cancela envíos pendientes/programados del contacto en los canales afectados.
+        setEnvios((prev) =>
+          prev.map((e) =>
+            e.clienteId === clienteId && canales.includes(e.canal) && ["pendiente", "programado"].includes(e.estado)
+              ? {
+                  ...e,
+                  estado: "cancelado",
+                  historial: [...e.historial, { fecha: ahora(), evento: "Cancelado por baja/oposición", usuario: USUARIO_ACTUAL }],
+                }
+              : e,
+          ),
+        );
+        log({ modulo: "Consentimientos", accion: "Baja / oposición registrada", detalle: `${canales.join(", ")} · ${origen} · ${motivo}`, clienteId });
+      },
+      registrarConsentimiento: (clienteId, canal, fuente) => {
+        aplicarCliente(clienteId, (c) => ({
+          ...c,
+          fuenteConsentimiento: fuente,
+          consentimiento: { ...c.consentimiento, [canal]: "valido" },
+        }));
+        log({ modulo: "Consentimientos", accion: "Opt-in registrado", detalle: `${canal} · fuente: ${fuente}`, clienteId });
+      },
       registrarEvento: (envioId, evento) =>
         setEnvios((prev) =>
           prev.map((e) =>
@@ -108,7 +175,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           ...prev,
         ]),
     }),
-    [envios, secuencias, entradas, borradores],
+    [envios, secuencias, entradas, borradores, clientes, auditoria],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

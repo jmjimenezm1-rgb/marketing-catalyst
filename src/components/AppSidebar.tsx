@@ -35,7 +35,9 @@ const activos = [
   { title: "Secuencias", url: "/secuencias", icon: GitBranch },
   { title: "Bandeja de entrada", url: "/bandeja-entrada", icon: Inbox },
   { title: "Bandeja de salida", url: "/bandeja-salida", icon: FileEdit },
-];
+  { title: "Consentimientos", url: "/consentimientos", icon: ShieldCheck },
+  { title: "Auditoría legal", url: "/auditoria", icon: ScrollText },
+] as const;
 
 const pendientes = [
   { title: "Dashboard", icon: LayoutDashboard },
@@ -46,8 +48,6 @@ const pendientes = [
   { title: "Generador de mensajes", icon: Sparkles },
   { title: "Revisión de mensajes", icon: ClipboardCheck },
   { title: "Respuesta inteligente", icon: Sparkles },
-  { title: "Consentimientos", icon: ShieldCheck },
-  { title: "Auditoría legal", icon: ScrollText },
   { title: "Analítica", icon: BarChart3 },
   { title: "Integraciones", icon: Plug },
   { title: "Configuración", icon: Settings },

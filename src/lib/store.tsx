@@ -1,8 +1,10 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
 import {
   borradoresSeed,
+  campanas as campanasSeed,
   clientes as clientesSeed,
   type Canal,
+  type Campana,
   type Cliente,
   entradasSeed,
   enviosSeed,
@@ -31,6 +33,8 @@ interface Store {
   actualizarBorrador: (id: string, cambios: Partial<Borrador>) => void;
   crearBorradorIA: (entrada: MensajeEntrada, texto: string) => void;
   clientes: Cliente[];
+  campanas: Campana[];
+  cambiarEstadoCampana: (id: string, estado: Campana["estado"]) => void;
   auditoria: EventoAuditoria[];
   registrarBaja: (clienteId: string, canales: Canal[], motivo: string, origen: string) => void;
   registrarConsentimiento: (clienteId: string, canal: Canal, fuente: string) => void;
@@ -56,6 +60,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [entradas, setEntradas] = useState<MensajeEntrada[]>(entradasSeed);
   const [borradores, setBorradores] = useState<Borrador[]>(borradoresSeed);
   const [clientes, setClientes] = useState<Cliente[]>(clientesSeed);
+  const [campanas, setCampanas] = useState<Campana[]>(campanasSeed);
   const [auditoria, setAuditoria] = useState<EventoAuditoria[]>([]);
   const log = (e: Omit<EventoAuditoria, "id" | "fecha" | "usuario">) =>
     setAuditoria((prev) => [
@@ -82,6 +87,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       borradores,
       usuario: USUARIO_ACTUAL,
       clientes,
+      campanas,
+      cambiarEstadoCampana: (id, estado) => {
+        setCampanas((prev) =>
+          prev.map((c) => {
+            if (c.id !== id) return c;
+            const ref = campanasSeed.find((x) => x.id === id);
+            if (ref) ref.estado = estado;
+            return { ...c, estado };
+          }),
+        );
+        const nombre = campanas.find((c) => c.id === id)?.nombre ?? id;
+        log({ modulo: "Campañas", accion: "Cambio de estado de campaña", detalle: `${nombre} → ${estado.replace("_", " ")}` });
+      },
       auditoria,
       registrarBaja: (clienteId, canales, motivo, origen) => {
         aplicarCliente(clienteId, (c) => ({
@@ -175,7 +193,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           ...prev,
         ]),
     }),
-    [envios, secuencias, entradas, borradores, clientes, auditoria],
+    [envios, secuencias, entradas, borradores, clientes, campanas, auditoria],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

@@ -4,10 +4,12 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { ArrowLeft } from "lucide-react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -126,6 +128,22 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function BackButton() {
+  const router = useRouter();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  if (pathname === "/") return null;
+  return (
+    <button
+      type="button"
+      onClick={() => router.history.back()}
+      aria-label="Volver atrás"
+      className="inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-border bg-card text-foreground transition-colors hover:bg-accent"
+    >
+      <ArrowLeft className="size-4" />
+    </button>
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
@@ -137,6 +155,7 @@ function RootComponent() {
             <AppSidebar />
             <div className="flex min-w-0 flex-1 flex-col">
               <header className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b border-border bg-card/80 px-4 backdrop-blur">
+                <BackButton />
                 <SidebarTrigger />
                 <span className="text-sm font-medium text-foreground">MarketingHub AI</span>
                 <span className="hidden rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground sm:inline">

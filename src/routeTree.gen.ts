@@ -13,8 +13,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuditoriaRouteImport } from './routes/auditoria'
 import { Route as BandejaEntradaRouteImport } from './routes/bandeja-entrada'
 import { Route as BandejaSalidaRouteImport } from './routes/bandeja-salida'
+import { Route as CampanasRouteImport } from './routes/campanas'
+import { Route as ClientesRouteImport } from './routes/clientes'
 import { Route as ConsentimientosRouteImport } from './routes/consentimientos'
 import { Route as EnviosRouteImport } from './routes/envios'
+import { Route as ProductosRouteImport } from './routes/productos'
 import { Route as SecuenciasRouteImport } from './routes/secuencias'
 
 const IndexRoute = IndexRouteImport.update({
@@ -37,6 +40,16 @@ const BandejaSalidaRoute = BandejaSalidaRouteImport.update({
   path: '/bandeja-salida',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CampanasRoute = CampanasRouteImport.update({
+  id: '/campanas',
+  path: '/campanas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClientesRoute = ClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConsentimientosRoute = ConsentimientosRouteImport.update({
   id: '/consentimientos',
   path: '/consentimientos',
@@ -45,6 +58,11 @@ const ConsentimientosRoute = ConsentimientosRouteImport.update({
 const EnviosRoute = EnviosRouteImport.update({
   id: '/envios',
   path: '/envios',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductosRoute = ProductosRouteImport.update({
+  id: '/productos',
+  path: '/productos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SecuenciasRoute = SecuenciasRouteImport.update({
@@ -58,8 +76,11 @@ export interface FileRoutesByFullPath {
   '/auditoria': typeof AuditoriaRoute
   '/bandeja-entrada': typeof BandejaEntradaRoute
   '/bandeja-salida': typeof BandejaSalidaRoute
+  '/campanas': typeof CampanasRoute
+  '/clientes': typeof ClientesRoute
   '/consentimientos': typeof ConsentimientosRoute
   '/envios': typeof EnviosRoute
+  '/productos': typeof ProductosRoute
   '/secuencias': typeof SecuenciasRoute
 }
 export interface FileRoutesByTo {
@@ -67,8 +88,11 @@ export interface FileRoutesByTo {
   '/auditoria': typeof AuditoriaRoute
   '/bandeja-entrada': typeof BandejaEntradaRoute
   '/bandeja-salida': typeof BandejaSalidaRoute
+  '/campanas': typeof CampanasRoute
+  '/clientes': typeof ClientesRoute
   '/consentimientos': typeof ConsentimientosRoute
   '/envios': typeof EnviosRoute
+  '/productos': typeof ProductosRoute
   '/secuencias': typeof SecuenciasRoute
 }
 export interface FileRoutesById {
@@ -77,8 +101,11 @@ export interface FileRoutesById {
   '/auditoria': typeof AuditoriaRoute
   '/bandeja-entrada': typeof BandejaEntradaRoute
   '/bandeja-salida': typeof BandejaSalidaRoute
+  '/campanas': typeof CampanasRoute
+  '/clientes': typeof ClientesRoute
   '/consentimientos': typeof ConsentimientosRoute
   '/envios': typeof EnviosRoute
+  '/productos': typeof ProductosRoute
   '/secuencias': typeof SecuenciasRoute
 }
 export interface FileRouteTypes {
@@ -88,8 +115,11 @@ export interface FileRouteTypes {
     | '/auditoria'
     | '/bandeja-entrada'
     | '/bandeja-salida'
+    | '/campanas'
+    | '/clientes'
     | '/consentimientos'
     | '/envios'
+    | '/productos'
     | '/secuencias'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -97,8 +127,11 @@ export interface FileRouteTypes {
     | '/auditoria'
     | '/bandeja-entrada'
     | '/bandeja-salida'
+    | '/campanas'
+    | '/clientes'
     | '/consentimientos'
     | '/envios'
+    | '/productos'
     | '/secuencias'
   id:
     | '__root__'
@@ -106,8 +139,11 @@ export interface FileRouteTypes {
     | '/auditoria'
     | '/bandeja-entrada'
     | '/bandeja-salida'
+    | '/campanas'
+    | '/clientes'
     | '/consentimientos'
     | '/envios'
+    | '/productos'
     | '/secuencias'
   fileRoutesById: FileRoutesById
 }
@@ -116,8 +152,11 @@ export interface RootRouteChildren {
   AuditoriaRoute: typeof AuditoriaRoute
   BandejaEntradaRoute: typeof BandejaEntradaRoute
   BandejaSalidaRoute: typeof BandejaSalidaRoute
+  CampanasRoute: typeof CampanasRoute
+  ClientesRoute: typeof ClientesRoute
   ConsentimientosRoute: typeof ConsentimientosRoute
   EnviosRoute: typeof EnviosRoute
+  ProductosRoute: typeof ProductosRoute
   SecuenciasRoute: typeof SecuenciasRoute
 }
 
@@ -151,6 +190,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BandejaSalidaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/campanas': {
+      id: '/campanas'
+      path: '/campanas'
+      fullPath: '/campanas'
+      preLoaderRoute: typeof CampanasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clientes': {
+      id: '/clientes'
+      path: '/clientes'
+      fullPath: '/clientes'
+      preLoaderRoute: typeof ClientesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/consentimientos': {
       id: '/consentimientos'
       path: '/consentimientos'
@@ -163,6 +216,13 @@ declare module '@tanstack/react-router' {
       path: '/envios'
       fullPath: '/envios'
       preLoaderRoute: typeof EnviosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/productos': {
+      id: '/productos'
+      path: '/productos'
+      fullPath: '/productos'
+      preLoaderRoute: typeof ProductosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/secuencias': {
@@ -180,8 +240,11 @@ const rootRouteChildren: RootRouteChildren = {
   AuditoriaRoute: AuditoriaRoute,
   BandejaEntradaRoute: BandejaEntradaRoute,
   BandejaSalidaRoute: BandejaSalidaRoute,
+  CampanasRoute: CampanasRoute,
+  ClientesRoute: ClientesRoute,
   ConsentimientosRoute: ConsentimientosRoute,
   EnviosRoute: EnviosRoute,
+  ProductosRoute: ProductosRoute,
   SecuenciasRoute: SecuenciasRoute,
 }
 export const routeTree = rootRouteImport
